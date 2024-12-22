@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';  // Import the audioplayers package
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'), // Updated to bodyMedium
+          bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
         ),
       ),
       home: const MyHomePage(title: 'ConnectX'),
@@ -36,20 +37,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0; // Index for the bottom navigation bar
+  int _selectedIndex = 0;  // Index for bottom navigation bar
 
-  // List of Widgets corresponding to each bottom navigation item
-  final List<Widget> _widgetOptions = const [
-    HomeScreen(),
-    ChatsScreen(),
-    SettingsScreen(),
-  ];
+  late AudioPlayer _audioPlayer;  // Declare AudioPlayer
 
-  // Method to handle bottom navigation bar taps
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();  // Initialize the AudioPlayer here
+  }
+
+  // Handle bottom navigation item taps
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    // Play sound on tap
+    _audioPlayer.play(AssetSource('assets/sounds/tap_sound.mp3'));  // Play sound from assets
   }
 
   @override
@@ -58,10 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex), // Display the widget based on selected tab
+      body: Center(
+        child: Text('Home Screen'),
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex, // Set the current selected index
-        onTap: _onItemTapped, // Handle the item taps
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,  // Handle item taps
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -76,58 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Settings',
           ),
         ],
-      ),
-    );
-  }
-}
-
-// Home Screen Widget
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Nearby devices (0)', // Dynamic text can be used here later
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold, // Make it bolder for emphasis
-        ),
-      ),
-    );
-  }
-}
-
-// Chats Screen Widget
-class ChatsScreen extends StatelessWidget {
-  const ChatsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Chat screen is under development.',
-        style: TextStyle(
-          fontSize: 20,
-        ),
-      ),
-    );
-  }
-}
-
-// Settings Screen Widget
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Settings screen is under development.',
-        style: TextStyle(
-          fontSize: 20,
-        ),
       ),
     );
   }
