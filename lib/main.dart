@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'first_time_login.dart';
-import 'home_page.dart';
+import 'my_home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-  // Check if the app is launched for the first time
-  final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-
-  runApp(const MyApp(isFirstTime: true));
+  runApp(MyApp(isFirstTime: isFirstTime));
 }
 
 class MyApp extends StatelessWidget {
@@ -32,8 +31,9 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
         ),
       ),
-      // Navigate to the appropriate page based on the first-time flag
-      home: isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnectX'),
+      home: isFirstTime
+          ? const FirstTimeLoginPage()
+          : const MyHomePage(title: 'ConnectX'),
     );
   }
 }

@@ -1,15 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test_app/main.dart'; // Adjust the import if needed
+import 'package:test_app/main.dart';
 
 void main() {
-  testWidgets('Home page displays the correct title', (WidgetTester tester) async {
-    // Build the app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isFirstTime: false)); // Pass `isFirstTime` if required.
+  testWidgets('Home page displays the correct title and welcome message',
+          (WidgetTester tester) async {
+        // Build the app and trigger a frame.
+        await tester.pumpWidget(const MyApp(isFirstTime: false));
 
-    // Verify that the home page title is displayed.
-    expect(find.text('ConnectX'), findsOneWidget);
+        // Verify the title is displayed.
+        expect(find.text('ConnectX'), findsOneWidget);
 
-    // Verify that the default body text is displayed.
-    expect(find.text('Home Screen'), findsOneWidget);
-  });
+        // Verify the welcome message is displayed.
+        expect(find.text('Welcome, User!'), findsOneWidget);
+      });
 }

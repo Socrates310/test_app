@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home_page.dart';
+import 'my_home_page.dart';
 
 class FirstTimeLoginPage extends StatefulWidget {
   const FirstTimeLoginPage({super.key});
@@ -12,46 +12,49 @@ class FirstTimeLoginPage extends StatefulWidget {
 class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
   final TextEditingController _nameController = TextEditingController();
 
-  // Save name and update first-time flag
-  void _saveName() async {
+  Future<void> _saveUserName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', _nameController.text);
-    await prefs.setBool('isFirstTime', false); // Mark the first-time setup as complete
+    await prefs.setBool('isFirstTime', false);
 
-    // Navigate to the home page
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const MyHomePage(title: 'ConnectX')),
-    );
+    // Navigate to home after saving
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MyHomePage(title: 'ConnectX'),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome to ConnectX'),
+        title: const Text('First Time Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             const Text(
-              'Enter your name to get started',
-              style: TextStyle(fontSize: 20),
+              'Enter your name for identification:',
+              style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
-                labelText: 'Name',
                 border: OutlineInputBorder(),
+                labelText: 'Your Name',
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveName,
-              child: const Text('Save and Continue'),
+              onPressed: _saveUserName,
+              child: const Text('Continue'),
             ),
           ],
         ),
