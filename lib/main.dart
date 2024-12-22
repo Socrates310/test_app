@@ -10,7 +10,7 @@ void main() async {
   // Check if the app is launched for the first time
   final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-  runApp(MyApp(isFirstTime: isFirstTime));
+  runApp(const MyApp(isFirstTime: true));
 }
 
 class MyApp extends StatelessWidget {
