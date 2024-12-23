@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
         ),
       ),
-      home: isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnextX'), // No need for userName here
+      home: isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnectX'), // No need for userName here
     );
   }
 }
