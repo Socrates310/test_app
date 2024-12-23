@@ -7,10 +7,10 @@ class NameChangeDialog extends StatefulWidget {
   const NameChangeDialog({super.key, required this.currentUserName});
 
   @override
-  _NameChangeDialogState createState() => _NameChangeDialogState();
+  NameChangeDialogState createState() => NameChangeDialogState();
 }
 
-class _NameChangeDialogState extends State<NameChangeDialog> {
+class NameChangeDialogState extends State<NameChangeDialog> {
   late TextEditingController _controller;
 
   @override
@@ -22,6 +22,8 @@ class _NameChangeDialogState extends State<NameChangeDialog> {
   Future<void> _saveName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', _controller.text);
+
+    if (!mounted) return; // Check if the widget is still in the tree
     Navigator.pop(context); // Close the dialog
   }
 

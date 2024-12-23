@@ -5,10 +5,10 @@ class CustomDrawer extends StatelessWidget {
   final VoidCallback onChangeUserName;
 
   const CustomDrawer({
-    Key? key,
+    super.key,
     required this.userName,
     required this.onChangeUserName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
