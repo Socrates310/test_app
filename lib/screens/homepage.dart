@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'namechange.dart'; // Correct import path to match actual location
+import 'drawer.dart'; // Import the custom drawer
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -46,36 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(child: Text('Welcome, $_userName!')),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(_userName),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: _changeUserName,
-                  ),
-                ],
-              ),
-              accountEmail: null,
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.purple,
-                child: Text(_userName[0].toUpperCase(), style: const TextStyle(color: Colors.white)),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+      drawer: CustomDrawer(
+        userName: _userName,
+        onChangeUserName: _changeUserName, // Passing the function to handle name change
       ),
     );
   }
