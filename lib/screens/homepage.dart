@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'namechange.dart'; // Correct import path to match actual location
+import 'package:test_app/widgets/namechange.dart'; // Correct import path to match actual location
 import 'drawer.dart'; // Import the custom drawer
 
 class MyHomePage extends StatefulWidget {
