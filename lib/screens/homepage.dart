@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/widgets/namechange.dart'; // Correct import path to match actual location
-import 'drawer.dart'; // Import the custom drawer
+import 'package:test_app/widgets/drawer.dart'; // Import the custom drawer
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -51,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
         userName: _userName,
         onChangeUserName: _changeUserName, // Passing the function to handle name change
       ),
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3,  // Set swipe range to 30% of the screen width
     );
   }
 }
