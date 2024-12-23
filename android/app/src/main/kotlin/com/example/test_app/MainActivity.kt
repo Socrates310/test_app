@@ -28,9 +28,6 @@ class MainActivity : FlutterActivity() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSION_REQUEST_CODE
             )
-        } else {
-            // Permission already granted, proceed with Wi-Fi Direct functionality
-            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
 
