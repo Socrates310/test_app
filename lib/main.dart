@@ -8,16 +8,14 @@ void main() async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-  String userName = prefs.getString('userName') ?? 'User';
 
-  runApp(MyApp(isFirstTime: isFirstTime, userName: userName));
+  runApp(MyApp(isFirstTime: isFirstTime));
 }
 
 class MyApp extends StatelessWidget {
   final bool isFirstTime;
-  final String userName;
 
-  const MyApp({super.key, required this.isFirstTime, required this.userName});
+  const MyApp({super.key, required this.isFirstTime});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +31,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
         ),
       ),
-      home: isFirstTime
-          ? const FirstTimeLoginPage()
-          : MyHomePage(title: 'ConnectX', userName: userName), // Pass userName
+      home: isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnextX'), // No need for userName here
     );
   }
 }

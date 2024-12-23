@@ -51,7 +51,7 @@ class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(title: 'ConnectX', userName: userName),
+            builder: (context) => const MyHomePage(title: "ConnectX"),
           ),
         );
       }

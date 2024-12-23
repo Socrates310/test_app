@@ -1,57 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_app/widgets/namechange.dart'; // Correct import path to match actual location
-import 'package:test_app/widgets/drawer.dart'; // Import the custom drawer
+import 'package:test_app/widgets/drawer.dart'; // Import custom drawer
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   final String title;
-  final String userName;
 
-  const MyHomePage({super.key, required this.title, required this.userName});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  late String _userName;
-
-  @override
-  void initState() {
-    super.initState();
-    _userName = widget.userName;
-  }
-
-  void _changeUserName() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return NameChangeDialog(currentUserName: _userName); // Using NameChangeDialog here
-      },
-    ).then((_) {
-      _loadUserName();
-    });
-  }
-
-  Future<void> _loadUserName() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _userName = prefs.getString('userName') ?? 'User';
-    });
-  }
+  const MyHomePage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: Center(child: Text('Welcome, $_userName!')),
-      drawer: CustomDrawer(
-        userName: _userName,
-        onChangeUserName: _changeUserName, // Passing the function to handle name change
-      ),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3,  // Set swipe range to 30% of the screen width
+      body: Center(child: const Text('Welcome!')), // Simplified welcome text
+      drawer: const CustomDrawer(), // CustomDrawer handles the username change
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3, // Set swipe range to 30% of the screen width
     );
   }
 }
+
+
+

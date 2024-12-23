@@ -1,14 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'namechange.dart'; // Import the NameChangeDialog
 
-class CustomDrawer extends StatelessWidget {
-  final String userName;
-  final VoidCallback onChangeUserName;
+class CustomDrawer extends StatefulWidget {
+  const CustomDrawer({super.key});
 
-  const CustomDrawer({
-    super.key,
-    required this.userName,
-    required this.onChangeUserName,
-  });
+  @override
+  CustomDrawerState createState() => CustomDrawerState();
+}
+
+class CustomDrawerState extends State<CustomDrawer> {
+  String userName = "User"; // Initial default name
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  // Function to load username from SharedPreferences
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? 'User';
+    });
+  }
+
+  // Function to show the NameChangeDialog
+  Future<void> _changeUserName() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NameChangeDialog(
+          currentUserName: userName,
+          onNameChanged: (newUserName) {
+            setState(() {
+              userName = newUserName; // Update username in the drawer
+            });
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +53,10 @@ class CustomDrawer extends StatelessWidget {
             accountName: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(userName),
+                Text(userName), // Display current username
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: onChangeUserName,
+                  onPressed: _changeUserName, // Open the dialog to change name
                 ),
               ],
             ),
@@ -38,7 +71,7 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context); // Handle settings navigation if needed
             },
           ),
         ],
