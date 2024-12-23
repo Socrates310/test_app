@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart'; // Correct import
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io'; // Import dart:io to check platform
 
 class FirstTimeLoginPage extends StatefulWidget {
   const FirstTimeLoginPage({super.key});
@@ -11,7 +13,33 @@ class FirstTimeLoginPage extends StatefulWidget {
 
 class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
   final TextEditingController _nameController = TextEditingController();
+  final deviceInfoPlugin = DeviceInfoPlugin();
 
+  @override
+  void initState() {
+    super.initState();
+    _getDeviceName();
+  }
+
+  // Fetch the device name and set it in the text field
+  void _getDeviceName() async {
+    String deviceName = 'User'; // Default value if device name is not available
+
+    // Check if the platform is Android or iOS and fetch device info accordingly
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      deviceName = androidInfo.model;  // Default to 'User' if model is null
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      deviceName = iosInfo.name;  // Default to 'User' if name is null
+    }
+
+    if (mounted) {
+      _nameController.text = deviceName; // Set the fetched device name
+    }
+  }
+
+  // Save the username and navigate to the home page
   void _saveUserName() async {
     final String userName = _nameController.text;
     if (userName.isNotEmpty) {
@@ -23,7 +51,7 @@ class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(title: 'ConnectX', userName: userName), // Pass userName to MyHomePage
+            builder: (context) => MyHomePage(title: 'ConnectX', userName: userName),
           ),
         );
       }

@@ -2,7 +2,7 @@ name: test_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.7.0+16
+version: 0.7.1+17
 
 environment:
   sdk: ^3.6.0
@@ -10,12 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  audioplayers: ^6.1.0
+
   http: ^1.2.2
   provider: ^6.1.2
   shared_preferences: ^2.1.0
   cupertino_icons: ^1.0.8
   logger: ^1.0.0
+  device_info_plus: ^9.0.3
 
 dev_dependencies:
   flutter_test:
