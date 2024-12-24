@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+    <string>We need Bluetooth to search for nearby devices</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need location permission to find nearby Bluetooth devices</string>
+
 </dict>
 </plist>
