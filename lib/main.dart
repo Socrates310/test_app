@@ -3,7 +3,7 @@ import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/first_time_login.dart';
 import 'screens/homepage.dart'; // Correct import
-import 'utils/theme_provider.dart'; // Import ThemeProvider
+import 'provider/theme_provider.dart'; // Import ThemeProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
