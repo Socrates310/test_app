@@ -51,7 +51,7 @@ class MyHomePageState extends State<MyHomePage> {
         ),
       ),
       drawer: const CustomDrawer(),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.3,
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.35,
     );
   }
 }

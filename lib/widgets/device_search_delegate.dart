@@ -7,16 +7,20 @@ class DeviceSearchDelegate extends SearchDelegate {
   DeviceSearchDelegate({required this.devices});
 
   @override
+  @override
   List<Widget> buildActions(BuildContext context) {
-    return [
+    return query.isNotEmpty
+        ? [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(Icons.clear), // The 'X' icon
         onPressed: () {
-          query = '';
+          query = ''; // Clears the search query
         },
       ),
-    ];
+    ]
+        : [];
   }
+
 
   @override
   Widget buildLeading(BuildContext context) {
