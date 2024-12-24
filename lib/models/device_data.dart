@@ -8,12 +8,11 @@ class Device {
 }
 
 class DeviceData {
+  static List<Device> nearbyDevices = []; // This list will store the discovered Bluetooth devices
+
+  // Method to return the list of nearby devices
   static List<Device> getNearbyDevices() {
-    // In a real-world scenario, you would fetch this data from an API or local database
-    return [
-      Device(name: 'Device 1', details: 'Device 1 details'),
-      Device(name: 'Device 2', details: 'Device 2 details'),
-    ];
+    return nearbyDevices; // Return the list of nearby devices
   }
 
   static List<Device> getSavedChats() {
@@ -25,5 +24,10 @@ class DeviceData {
         details: 'Last message from Device ${index + 1}',
       ),
     );
+  }
+
+  // Method to update the nearby devices list
+  static void updateNearbyDevices(List<Device> newDevices) {
+    nearbyDevices = newDevices; // Update the list of nearby devices
   }
 }

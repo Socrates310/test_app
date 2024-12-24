@@ -3,6 +3,7 @@ import 'package:test_app/widgets/drawer.dart';
 import 'package:test_app/widgets/device_list.dart';
 import 'package:test_app/widgets/device_search_delegate.dart';
 import 'package:test_app/models/device_data.dart';
+import 'package:test_app/services/bluetooth_scan.dart'; // Import BluetoothScanPage
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -45,7 +46,14 @@ class MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            NearbyDevicesList(devices: nearbyDevices),
+            NearbyDevicesList(devices: nearbyDevices, onRescanPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BluetoothScanPage(),
+                ),
+              );
+            }),
             SavedChatsList(devices: savedChats),
           ],
         ),

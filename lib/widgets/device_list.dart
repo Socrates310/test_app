@@ -3,8 +3,13 @@ import 'package:test_app/models/device_data.dart';
 
 class NearbyDevicesList extends StatelessWidget {
   final List<Device> devices;
+  final VoidCallback onRescanPressed;
 
-  const NearbyDevicesList({super.key, required this.devices});
+  const NearbyDevicesList({
+    super.key,
+    required this.devices,
+    required this.onRescanPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,15 @@ class NearbyDevicesList extends StatelessWidget {
             subtitle: Text(device.details),
           );
         }),
+        SizedBox(height: 16),
+        // Rescan button at the bottom right
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton(
+            onPressed: onRescanPressed, // Trigger rescan when pressed
+            child: Icon(Icons.refresh), // Icon to indicate refresh
+          ),
+        ),
       ],
     );
   }
