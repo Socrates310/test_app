@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/first_time_login.dart';
 import 'screens/homepage.dart'; // Correct import
+import 'utils/theme_provider.dart'; // Import ThemeProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load shared preferences and first-time login check
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-  runApp(MyApp(isFirstTime: isFirstTime));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(), // Provide ThemeProvider to the widget tree
+      child: MyApp(isFirstTime: isFirstTime),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,6 +27,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme state from ThemeProvider
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'ConnectX',
       theme: ThemeData(
@@ -31,7 +42,11 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
         ),
       ),
-      home: isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnectX'), // No need for userName here
+      darkTheme: ThemeData.dark(), // Optionally define a dark theme
+      themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light, // Apply theme globally
+      home: isFirstTime
+          ? const FirstTimeLoginPage()
+          : const MyHomePage(title: 'ConnectX'),
     );
   }
 }
