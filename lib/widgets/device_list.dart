@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/device_data.dart';
 
-class NearbyDevicesList extends StatelessWidget {
+class NearbyDevicesList extends StatefulWidget {
   final List<Device> devices;
 
   const NearbyDevicesList({super.key, required this.devices});
+
+  @override
+  NearbyDevicesListState createState() => NearbyDevicesListState();
+}
+
+class NearbyDevicesListState extends State<NearbyDevicesList> {
+  // This stateful widget will use widget.devices, and rebuild when devices change
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +25,34 @@ class NearbyDevicesList extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        ...devices.map((device) {
-          return ListTile(
-            title: Text(device.name),
-            subtitle: Text(device.details),
-          );
-        }),
+        // Use ListView.builder to dynamically handle the list length
+        Expanded(
+          child: ListView.builder(
+            itemCount: widget.devices.length,
+            itemBuilder: (context, index) {
+              final device = widget.devices[index];
+              return ListTile(
+                title: Text(device.name),
+                subtitle: Text(device.details),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 }
 
-class SavedChatsList extends StatelessWidget {
+class SavedChatsList extends StatefulWidget {
   final List<Device> devices;
 
   const SavedChatsList({super.key, required this.devices});
 
+  @override
+  SavedChatsListState createState() => SavedChatsListState();
+}
+
+class SavedChatsListState extends State<SavedChatsList> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,12 +65,19 @@ class SavedChatsList extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        ...devices.map((device) {
-          return ListTile(
-            title: Text(device.name),
-            subtitle: Text(device.details),
-          );
-        }),
+        // Use ListView.builder for dynamic list handling
+        Expanded(
+          child: ListView.builder(
+            itemCount: widget.devices.length,
+            itemBuilder: (context, index) {
+              final device = widget.devices[index];
+              return ListTile(
+                title: Text(device.name),
+                subtitle: Text(device.details),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
