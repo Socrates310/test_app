@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/widgets/drawer.dart';
-import 'package:test_app/widgets/device_list.dart';
-import 'package:test_app/widgets/device_search_delegate.dart';
-import 'package:test_app/models/device_data.dart';
+import '../widgets/drawer.dart';
+import '../widgets/device_list.dart';
+import '../widgets/device_search_delegate.dart';
+import '../models/device_data.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;

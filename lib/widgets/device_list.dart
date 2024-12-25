@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/models/device_data.dart';
+import '../models/device_data.dart';
 
 class NearbyDevicesList extends StatelessWidget {
   final List<Device> devices;
