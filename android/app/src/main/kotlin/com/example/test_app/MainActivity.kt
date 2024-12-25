@@ -15,20 +15,30 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Check if location permission is granted
-        val permissionCheck = ContextCompat.checkSelfPermission(
+        // Check if ACCESS_FINE_LOCATION permission is granted
+        val locationPermissionCheck = ContextCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
 
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            // Request permission if not granted
+        // Check if NEARBY_WIFI_DEVICES permission is granted
+        val wifiPermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.NEARBY_WIFI_DEVICES
+        )
+
+        // If any permission is not granted, request both
+        if (locationPermissionCheck != PackageManager.PERMISSION_GRANTED || wifiPermissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.NEARBY_WIFI_DEVICES
+                ),
                 PERMISSION_REQUEST_CODE
             )
         }
+        // No action if both permissions are already granted
     }
 
     // Handle permission result
@@ -38,14 +48,21 @@ class MainActivity : FlutterActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with Wi-Fi Direct functionality
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+            var allPermissionsGranted = true
+            // Check if both permissions were granted
+            for (result in grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false
+                    break
+                }
+            }
+            if (allPermissionsGranted) {
+                // Both permissions granted, proceed with the functionality
+                Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show()
             } else {
-                // Permission denied
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                // One or both permissions denied
+                Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
 }
-
