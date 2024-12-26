@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/drawer.dart';
-import 'wifi_page.dart'; // Import WifiPage
+import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
+import 'wifi_page.dart';  // Import WifiPage
+import '../widgets/drawer.dart';  // Import CustomDrawer
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -12,6 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  late List<DiscoveredPeers> _discoveredPeers = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,31 +23,32 @@ class MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.wifi),
-            onPressed: () {
-              // Navigate to WifiPage
-              Navigator.push(
+            onPressed: () async {
+              // Navigate to WifiPage and await result (discovered peers)
+              final List<DiscoveredPeers> peers = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const WifiPage()),
               );
+              setState(() {
+                _discoveredPeers = peers;
+              });
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Welcome to ${widget.title}!',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-          ],
-        ),
+      body: _discoveredPeers.isEmpty
+          ? const Center(child: Text('No devices found.'))
+          : ListView.builder(
+        itemCount: _discoveredPeers.length,
+        itemBuilder: (context, index) {
+          final peer = _discoveredPeers[index];
+          return ListTile(
+            title: Text(peer.deviceName),
+            subtitle: Text(peer.deviceAddress),
+          );
+        },
       ),
-      drawer: const CustomDrawer(),
+      drawer: const CustomDrawer(),  // Include CustomDrawer
       drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.35,
     );
   }
