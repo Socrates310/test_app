@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/drawer.dart';
-import '../widgets/device_list.dart';
-import '../widgets/device_search_delegate.dart';
-import '../models/device_data.dart';
+import 'wifi_page.dart'; // Import WifiPage
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -14,16 +12,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  List<Device> nearbyDevices = [];
-  List<Device> savedChats = [];
-
-  @override
-  void initState() {
-    super.initState();
-    nearbyDevices = DeviceData.getNearbyDevices();
-    savedChats = DeviceData.getSavedChats();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,11 +19,12 @@ class MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.wifi),
             onPressed: () {
-              showSearch(
-                context: context,
-                delegate: DeviceSearchDelegate(devices: nearbyDevices),
+              // Navigate to WifiPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WifiPage()),
               );
             },
           ),
@@ -45,8 +34,13 @@ class MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            NearbyDevicesList(devices: nearbyDevices),
-            SavedChatsList(devices: savedChats),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Welcome to ${widget.title}!',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
           ],
         ),
       ),
