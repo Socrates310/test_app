@@ -3,11 +3,12 @@ import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/first_time_login.dart';
 import 'screens/homepage.dart'; // Correct import
-import 'provider/theme_provider.dart'; // Import ThemeProvider
+import 'provider/theme_provider.dart';
+import 'services/wifi_manager.dart'; // Import ThemeProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await WiFiManager().initialize();
   // Load shared preferences and first-time login check
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
@@ -50,3 +51,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
