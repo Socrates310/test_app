@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_app/screens/homescreen2.dart';
 import 'screens/first_time_login.dart';
 import 'screens/homepage.dart'; // Correct import
 import 'provider/theme_provider.dart';
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light, // Apply theme globally
       home: isFirstTime
           ? const FirstTimeLoginPage()
-          : const MyHomePage(title: 'ConnectX'),
+          //: const MyHomePage(title: 'ConnectX'),
+          : HomePage(),
     );
   }
 }
