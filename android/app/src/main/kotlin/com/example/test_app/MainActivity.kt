@@ -27,18 +27,52 @@ class MainActivity : FlutterActivity() {
             Manifest.permission.NEARBY_WIFI_DEVICES
         )
 
-        // If any permission is not granted, request both
-        if (locationPermissionCheck != PackageManager.PERMISSION_GRANTED || wifiPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+        // Check if READ_MEDIA_IMAGES permission is granted
+        val imagesPermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_MEDIA_IMAGES
+        )
+
+        // Check if READ_MEDIA_VIDEO permission is granted
+        val videoPermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_MEDIA_VIDEO
+        )
+
+        // Check if READ_MEDIA_AUDIO permission is granted
+        val audioPermissionCheck = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_MEDIA_AUDIO
+        )
+
+        // Request permissions if not granted
+        val permissionsToRequest = mutableListOf<String>()
+
+        if (locationPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (wifiPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.NEARBY_WIFI_DEVICES)
+        }
+        if (imagesPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.READ_MEDIA_IMAGES)
+        }
+        if (videoPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.READ_MEDIA_VIDEO)
+        }
+        if (audioPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.READ_MEDIA_AUDIO)
+        }
+
+        // Request all permissions if any are not granted
+        if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.NEARBY_WIFI_DEVICES
-                ),
+                permissionsToRequest.toTypedArray(),
                 PERMISSION_REQUEST_CODE
             )
         }
-        // No action if both permissions are already granted
+        // No action if all permissions are already granted
     }
 
     // Handle permission result
@@ -49,7 +83,7 @@ class MainActivity : FlutterActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             var allPermissionsGranted = true
-            // Check if both permissions were granted
+            // Check if all requested permissions were granted
             for (result in grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     allPermissionsGranted = false
@@ -57,10 +91,10 @@ class MainActivity : FlutterActivity() {
                 }
             }
             if (allPermissionsGranted) {
-                // Both permissions granted, proceed with the functionality
+                // All permissions granted, proceed with the functionality
                 Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show()
             } else {
-                // One or both permissions denied
+                // One or more permissions denied
                 Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show()
             }
         }
