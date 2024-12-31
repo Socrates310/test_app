@@ -4,110 +4,6 @@ import 'homepage.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ConnectX',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: TextTheme(
-          headlineLarge: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          bodyLarge: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-            color: Colors.black,
-          ),
-          bodyMedium: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 14,
-            fontWeight: FontWeight.normal,
-            color: Colors.black,
-          ),
-        ),
-      ),
-      home: const SplashScreen(),
-    );
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _navigateToNextPage();
-  }
-
-  void _navigateToNextPage() async {
-    await Future.delayed(const Duration(seconds: 1, milliseconds: 500)); // Reduced time to 1.5 seconds
-    final prefs = await SharedPreferences.getInstance();
-    final isFirstTime = prefs.getBool('isFirstTime') ?? true;
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              isFirstTime ? const FirstTimeLoginPage() : const MyHomePage(title: 'ConnectX'),
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Color(0xFFEFEFEF)], // Subtle gray gradient
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            'ConnectX',
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-              fontFamily: 'Roboto',
-              fontSize: 36,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-              shadows: [
-                Shadow(
-                  color: Colors.grey.shade400,
-                  offset: const Offset(0, 2),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class FirstTimeLoginPage extends StatefulWidget {
   const FirstTimeLoginPage({super.key});
@@ -127,18 +23,18 @@ class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
   }
 
   void _getDeviceName() async {
-    String deviceName = 'User';
+    String deviceName = 'User'; // Default value if device name is not available
 
     if (Platform.isAndroid) {
       final androidInfo = await deviceInfoPlugin.androidInfo;
-      deviceName = androidInfo.model ?? 'User';
+      deviceName = androidInfo.model;  // Default to 'User' if model is null
     } else if (Platform.isIOS) {
       final iosInfo = await deviceInfoPlugin.iosInfo;
-      deviceName = iosInfo.name ?? 'User';
+      deviceName = iosInfo.name;  // Default to 'User' if name is null
     }
 
     if (mounted) {
-      _nameController.text = deviceName;
+      _nameController.text = deviceName; // Set the fetched device name
     }
   }
 
