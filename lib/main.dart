@@ -9,7 +9,7 @@ import 'services/wifi_manager.dart'; // Import ThemeProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await WiFiManager().initialize();
+  //await WiFiManager().initialize();
   // Load shared preferences and first-time login check
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;

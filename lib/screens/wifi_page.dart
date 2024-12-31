@@ -11,7 +11,7 @@ class WifiPage extends StatefulWidget {
   State<WifiPage> createState() => _WifiPageState();
 }
 
-class _WifiPageState extends State<WifiPage> with WidgetsBindingObserver {
+class _WifiPageState extends State<WifiPage> with WidgetsBindingObserver,AutomaticKeepAliveClientMixin {
   final TextEditingController msgText = TextEditingController();
   final _flutterP2pConnectionPlugin = FlutterP2pConnection();
   List<DiscoveredPeers> peers = [];
@@ -162,6 +162,7 @@ class _WifiPageState extends State<WifiPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Ensure that wantKeepAlive is called
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter p2p connection plugin'),
@@ -411,4 +412,7 @@ class _WifiPageState extends State<WifiPage> with WidgetsBindingObserver {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
