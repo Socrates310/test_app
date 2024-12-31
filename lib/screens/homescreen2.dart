@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 import 'wifi_page.dart'; // Import the Wi-Fi Page
+import 'chat_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -133,6 +134,15 @@ class _HomePageState extends State<HomePage> {
                         subtitle: Text(device.deviceAddress), // Device address
                         onTap: () {
                           // Implement navigation to the ChatPage
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                deviceName: connectedDevices[index].deviceName ?? 'Unknown Device',
+                                deviceAddress: connectedDevices[index].deviceAddress,
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
