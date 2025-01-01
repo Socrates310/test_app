@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_app/screens/homescreen2.dart';
+import 'package:test_app/screens/homepage.dart';
 import 'screens/first_time_login.dart';
 import 'screens/homepageold.dart'; // Correct import
 import 'provider/theme_provider.dart';
