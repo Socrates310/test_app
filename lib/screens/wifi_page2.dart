@@ -13,7 +13,7 @@ class WifiPage2 extends StatefulWidget {
 
 class _WifiPage2State extends State<WifiPage2> {
   final TextEditingController msgText = TextEditingController();
-  final WifiP2PManager _wifiP2PManager = WifiP2PManager();
+  //final WifiP2PManager _wifiP2PManager = WifiP2PManager();
   WifiP2PInfo? wifiP2PInfo;
   List<DiscoveredPeers> peers = [];
   //StreamSubscription<WifiP2PInfo>? _streamWifiInfo;
@@ -22,12 +22,12 @@ class _WifiPage2State extends State<WifiPage2> {
   @override
   void initState() {
     super.initState();
-    _wifiP2PManager.initialize();
+    WifiP2PManager.instance.initialize();
   }
 
   @override
   void dispose() {
-    _wifiP2PManager.closeSocketConnection();
+    WifiP2PManager.instance.closeSocketConnection();
     super.dispose();
   }
 
@@ -98,7 +98,7 @@ class _WifiPage2State extends State<WifiPage2> {
                               TextButton(
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  bool? bo = await _wifiP2PManager
+                                  bool? bo = await WifiP2PManager.instance
                                       .connect(peers[index].deviceAddress);
                                   snack("connected: $bo");
                                 },
@@ -137,28 +137,28 @@ class _WifiPage2State extends State<WifiPage2> {
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? isLocationEnabled = await _wifiP2PManager.checkLocationEnabled();
+                bool? isLocationEnabled = await WifiP2PManager.instance.checkLocationEnabled();
                 snack(isLocationEnabled == true ? "Location is enabled" : "Location is disabled");
               },
               child: const Text("Check Location Enabled"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? isWifiEnabled = await _wifiP2PManager.checkWifiEnabled();
+                bool? isWifiEnabled = await WifiP2PManager.instance.checkWifiEnabled();
                 snack(isWifiEnabled == true ? "Wi-Fi is enabled" : "Wi-Fi is disabled");
               },
               child: const Text("Check Wi-Fi Enabled"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool permissionGranted = await _wifiP2PManager.askLocationPermission();
+                bool permissionGranted = await WifiP2PManager.instance.askLocationPermission();
                 snack(permissionGranted ? "Location permission granted" : "Location permission denied");
               },
               child: const Text("Ask Location Permission"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool permissionGranted = await _wifiP2PManager.askStoragePermission();
+                bool permissionGranted = await WifiP2PManager.instance.askStoragePermission();
                 snack(permissionGranted ? "Storage permission granted" : "Storage permission denied");
               },
               child: const Text("Ask Storage Permission"),
@@ -166,35 +166,35 @@ class _WifiPage2State extends State<WifiPage2> {
 
             ElevatedButton(
               onPressed: () async {
-                bool locationEnabled = await _wifiP2PManager.enableLocationServices();
+                bool locationEnabled = await WifiP2PManager.instance.enableLocationServices();
                 snack(locationEnabled ? "Location enabled" : "Failed to enable location");
               },
               child: const Text("Enable Location"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool wifiEnabled = await _wifiP2PManager.enableWifiServices();
+                bool wifiEnabled = await WifiP2PManager.instance.enableWifiServices();
                 snack(wifiEnabled ? "Wi-Fi enabled" : "Failed to enable Wi-Fi");
               },
               child: const Text("Enable Wi-Fi"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? created = await _wifiP2PManager.createGroup();
+                bool? created = await WifiP2PManager.instance.createGroup();
                 snack(created != null && created ? "Group created" : "Failed to create group");
               },
               child: const Text("Create Group"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? removed = await _wifiP2PManager.removeGroup();
+                bool? removed = await WifiP2PManager.instance.removeGroup();
                 snack(removed != null && removed ? "Group removed/disconnected" : "Failed to remove group");
               },
               child: const Text("Remove Group/Disconnect"),
             ),
             ElevatedButton(
               onPressed: () async {
-                var info = await _wifiP2PManager.groupInfo();
+                var info = await WifiP2PManager.instance.groupInfo();
                 showDialog(
                   context: context,
                   builder: (context) => Center(
@@ -223,40 +223,40 @@ class _WifiPage2State extends State<WifiPage2> {
             ),
             ElevatedButton(
               onPressed: () async {
-                String? ip = await _wifiP2PManager.getIPAddress();
+                String? ip = await WifiP2PManager.instance.getIPAddress();
                 snack(ip != null ? 'IP: $ip' : 'Failed to get IP');
               },
               child: const Text("Get IP"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? discovering = await _wifiP2PManager.discover();
+                bool? discovering = await WifiP2PManager.instance.discover();
                 snack(discovering != null && discovering ? 'Discovery started' : 'Discovery failed');
               },
               child: const Text("Discover"),
             ),
             ElevatedButton(
               onPressed: () async {
-                bool? stopped = await _wifiP2PManager.stopDiscovery();
+                bool? stopped = await WifiP2PManager.instance.stopDiscovery();
                 snack(stopped != null && stopped ? 'Stopped discovery' : 'Failed to stop discovery');
               },
               child: const Text("Stop Discovery"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.startSocket();
+                await WifiP2PManager.instance.startSocket();
               },
               child: const Text("Open a Socket"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.connectToSocket();
+                await WifiP2PManager.instance.connectToSocket();
               },
               child: const Text("Connect to Socket"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.closeSocketConnection();
+                await WifiP2PManager.instance.closeSocketConnection();
               },
               child: const Text("Close Socket"),
             ),
@@ -268,19 +268,19 @@ class _WifiPage2State extends State<WifiPage2> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.sendMessage(msgText.text);
+                await WifiP2PManager.instance.sendMessage(msgText.text);
               },
               child: const Text("Send Message"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.sendFile(true,context);
+                await WifiP2PManager.instance.sendFile(true,context);
               },
               child: const Text("Send File"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await _wifiP2PManager.sendFile(false,context);
+                await WifiP2PManager.instance.sendFile(false,context);
               },
               child: const Text("send File"),
             ),

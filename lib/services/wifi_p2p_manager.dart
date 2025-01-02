@@ -7,16 +7,16 @@ import 'package:flutter_p2p_connection/flutter_p2p_connection_platform_interface
 
 class WifiP2PManager {
   // Singleton instance
-  static final WifiP2PManager _instance = WifiP2PManager._internal();
+  WifiP2PManager._privateConstructor();
 
-  // Get the singleton instance
-  factory WifiP2PManager() {
-    return _instance;
-  }
+  // The single instance of WifiP2PManager
+  static final WifiP2PManager _instance = WifiP2PManager._privateConstructor();
 
-  WifiP2PManager._internal();
+  // Instance of the flutter_p2p_connection plugin
+  final FlutterP2pConnection _flutterP2pConnectionPlugin = FlutterP2pConnection();
 
-  final _flutterP2pConnectionPlugin = FlutterP2pConnection();
+  // Public getter to access the singleton instance
+  static WifiP2PManager get instance => _instance;
   WifiP2PInfo? wifiP2PInfo;
 
 
