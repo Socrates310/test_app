@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/screens/homepage.dart';
+import 'package:test_app/screens/wifi_page.dart';
 import 'screens/first_time_login.dart';
 import 'provider/theme_provider.dart';
+import 'screens/wifi_page2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +49,8 @@ class MyApp extends StatelessWidget {
       home: isFirstTime
           ? const FirstTimeLoginPage()
           //: const MyHomePage(title: 'ConnectX'),
-          : HomePage(),
+          //: HomePage(),
+          : WifiPage2(),
     );
   }
 }
