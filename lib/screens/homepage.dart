@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     final peer = peers[index];
                     return ListTile(
-                      title: Text(peer.deviceName ?? 'Unknown Device'),
+                      title: Text(peer.deviceName),
                       subtitle: Text(peer.deviceAddress),
                       trailing: ElevatedButton(
                         onPressed: () => _connectToPeer(peer),
@@ -126,11 +126,11 @@ class _HomePageState extends State<HomePage> {
                         leading: CircleAvatar(
                           backgroundColor: Colors.grey, // Placeholder for device avatar
                           child: Text(
-                            device.deviceName?[0].toUpperCase() ?? 'U', // First letter of device name
+                            device.deviceName[0].toUpperCase(), // First letter of device name
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
-                        title: Text(device.deviceName ?? 'Unknown Device'), // Device name
+                        title: Text(device.deviceName), // Device name
                         subtitle: Text(device.deviceAddress), // Device address
                         onTap: () {
                           // Implement navigation to the ChatPage
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatPage(
-                                deviceName: connectedDevices[index].deviceName ?? 'Unknown Device',
+                                deviceName: connectedDevices[index].deviceName,
                                 deviceAddress: connectedDevices[index].deviceAddress,
                               ),
                             ),

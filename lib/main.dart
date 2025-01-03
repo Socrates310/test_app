@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_app/screens/homepage.dart';
-import 'package:test_app/screens/wifi_page.dart';
+//import 'package:test_app/screens/homepage.dart';
+//import 'package:test_app/screens/wifi_page.dart';
 import 'screens/first_time_login.dart';
 import 'provider/theme_provider.dart';
 import 'screens/wifi_page2.dart';
+import '../services/wifi_p2p_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,8 @@ void main() async {
   // Load shared preferences and first-time login check
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+  await WifiP2PManager.instance.initialize();
+  await WifiP2PManager.instance.register();
 
   runApp(
     ChangeNotifierProvider(

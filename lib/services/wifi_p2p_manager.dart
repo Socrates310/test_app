@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection_platform_interface.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class WifiP2PManager {
   // Singleton instance
+
   WifiP2PManager._privateConstructor();
 
   // The single instance of WifiP2PManager
@@ -114,6 +117,98 @@ class WifiP2PManager {
     print(updates);
   }
 
+  Future<bool> register() async {
+    if ((await FlutterP2pConnectionPlatform.instance.resume()) == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Stream<WifiP2PInfo> streamWifiP2PInfo() {
+    const peersChannel = EventChannel("flutter_p2p_connection_connectedPeers");
+    return peersChannel.receiveBroadcastStream().map((peers) {
+      if (peers == "null") {
+        return const WifiP2PInfo(
+          isConnected: false,
+          isGroupOwner: false,
+          groupOwnerAddress: "",
+          groupFormed: false,
+          clients: [],
+        );
+      }
+      Map<String, dynamic>? json = jsonDecode(peers);
+      if (json != null) {
+        List<Client> clients = [];
+        if ((json["clients"] as List).isNotEmpty) {
+          for (var i in json["clients"]) {
+            Map<String, dynamic> client = (i as Map<String, dynamic>);
+            clients.add(Client(
+              deviceName: client["deviceName"],
+              deviceAddress: client["deviceAddress"],
+              isGroupOwner: client["isGroupOwner"],
+              isServiceDiscoveryCapable: client["isServiceDiscoveryCapable"],
+              primaryDeviceType: client["primaryDeviceType"],
+              secondaryDeviceType: client["secondaryDeviceType"],
+              status: client["status"],
+            ));
+          }
+        }
+        bool isConnected = false;
+        if (json["isGroupOwner"] == true) {
+          if (json["isConnected"] == true && clients.isNotEmpty) {
+            isConnected = true;
+          } else {
+            isConnected = false;
+          }
+        } else {
+          isConnected = json["isConnected"];
+        }
+        return WifiP2PInfo(
+          isConnected: isConnected,
+          isGroupOwner: json["isGroupOwner"],
+          groupOwnerAddress: json["groupOwnerAddress"] == "null"
+              ? ""
+              : json["groupOwnerAddress"],
+          groupFormed: json["groupFormed"],
+          clients: clients,
+        );
+      } else {
+        return const WifiP2PInfo(
+          isConnected: false,
+          isGroupOwner: false,
+          groupOwnerAddress: "",
+          groupFormed: false,
+          clients: [],
+        );
+      }
+    });
+  }
+
+  Stream<List<DiscoveredPeers>> streamPeers() {
+    const peersChannel = EventChannel("flutter_p2p_connection_foundPeers");
+    return peersChannel.receiveBroadcastStream().map((peers) {
+      List<DiscoveredPeers> p = [];
+      if (peers == null) return p;
+      for (var obj in peers) {
+        Map<String, dynamic>? json = jsonDecode(obj);
+        if (json != null) {
+          p.add(
+            DiscoveredPeers(
+              deviceName: json["deviceName"],
+              deviceAddress: json["deviceAddress"],
+              isGroupOwner: json["isGroupOwner"],
+              isServiceDiscoveryCapable: json["isServiceDiscoveryCapable"],
+              primaryDeviceType: json["primaryDeviceType"],
+              secondaryDeviceType: json["secondaryDeviceType"],
+              status: json["status"],
+            ),
+          );
+        }
+      }
+      return p;
+    });
+  }
 
   // Show a snack bar message
   void snack(BuildContext context, String msg) {
@@ -125,7 +220,7 @@ class WifiP2PManager {
     );
   }
 
-  void register() => _flutterP2pConnectionPlugin.register();
+  //void register() => _flutterP2pConnectionPlugin.register();
 
   void unregister() => _flutterP2pConnectionPlugin.unregister();
 
@@ -159,5 +254,5 @@ class WifiP2PManager {
 
   Future<bool> connect(String address) async => await FlutterP2pConnectionPlatform.instance.connect(address) == true;
 
-}
 
+}

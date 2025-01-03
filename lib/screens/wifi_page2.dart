@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
+//import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
-import 'dart:io';
-import '../services/wifi_p2p_manager.dart'; // Import the WifiP2PManager singleton
+//import 'dart:io';
+import '../services/wifi_p2p_manager.dart';
+import 'dart:async';// Import the WifiP2PManager singleton
 
 class WifiPage2 extends StatefulWidget {
   const WifiPage2({super.key});
@@ -16,18 +17,40 @@ class _WifiPage2State extends State<WifiPage2> {
   //final WifiP2PManager _wifiP2PManager = WifiP2PManager();
   WifiP2PInfo? wifiP2PInfo;
   List<DiscoveredPeers> peers = [];
-  //StreamSubscription<WifiP2PInfo>? _streamWifiInfo;
-  //StreamSubscription<List<DiscoveredPeers>>? _streamPeers;
+  StreamSubscription<WifiP2PInfo>? _streamWifiInfo;
+  StreamSubscription<List<DiscoveredPeers>>? _streamPeers;
 
   @override
   void initState() {
     super.initState();
-    WifiP2PManager.instance.initialize();
+   // WifiP2PManager.instance.initialize();
+    _init();
   }
+
+  void _init() async {
+    // Initialize the WifiP2PManager instance
+    //await WifiP2PManager.instance.initialize();
+    //await WifiP2PManager.instance.register();
+
+    // Listen to WifiP2PInfo stream
+    _streamWifiInfo = WifiP2PManager.instance.streamWifiP2PInfo().listen((event) {
+      setState(() {
+        wifiP2PInfo = event; // Assuming wifiP2PInfo is a member variable
+      });
+    });
+
+    // Listen to discovered peers stream
+    _streamPeers = WifiP2PManager.instance.streamPeers().listen((event) {
+      setState(() {
+        peers = event;
+      });
+    });
+  }
+
 
   @override
   void dispose() {
-    WifiP2PManager.instance.closeSocketConnection();
+    //WifiP2PManager.instance.closeSocketConnection();
     super.dispose();
   }
 
