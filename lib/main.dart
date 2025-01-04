@@ -6,6 +6,7 @@ import 'screens/first_time_login.dart';
 import 'provider/theme_provider.dart';
 import '../services/wifi_p2p_manager.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //await WiFiManager().initialize();
