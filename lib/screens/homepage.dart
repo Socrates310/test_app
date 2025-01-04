@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
     // Start discovering peers when the page loads
-    // _flutterP2pConnectionPlugin.discover();
+    await WifiP2PManager.instance.discover();
   }
 
   void _connectToPeer(DiscoveredPeers peer) async {

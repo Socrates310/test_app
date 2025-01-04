@@ -62,7 +62,6 @@ class WiFiManagerService {
     await WifiP2PManager.instance.register();
     WifiP2PManager.instance.closeSocket();
     await WifiP2PManager.instance.removeGroup();
-    await WifiP2PManager.instance.discover();
   }
 }
 
