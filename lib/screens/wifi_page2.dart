@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 //import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
 //import 'dart:io';
 import '../services/wifi_p2p_manager.dart';
 import 'dart:async';// Import the WifiP2PManager singleton
+import 'package:filesystem_picker/filesystem_picker.dart';
 
 class WifiPage2 extends StatefulWidget {
   const WifiPage2({super.key});
@@ -52,6 +55,97 @@ class _WifiPage2State extends State<WifiPage2> {
   void dispose() {
     //WifiP2PManager.instance.closeSocketConnection();
     super.dispose();
+  }
+
+  Future startSocket() async {
+    if (wifiP2PInfo != null) {
+      bool started = await WifiP2PManager.instance.startSocket(
+        groupOwnerAddress: wifiP2PInfo!.groupOwnerAddress,
+        downloadPath: "/storage/emulated/0/Download/",
+        maxConcurrentDownloads: 2,
+        deleteOnError: true,
+        onConnect: (name, address) {
+          snack("$name connected to socket with address: $address");
+        },
+        transferUpdate: (transfer) {
+          if (transfer.completed) {
+            snack(
+                "${transfer.failed ? "failed to ${transfer.receiving ? "receive" : "send"}" : transfer.receiving ? "received" : "sent"}: ${transfer.filename}");
+          }
+          print(
+              "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
+        },
+        receiveString: (req) async {
+          snack(req);
+        },
+      );
+      snack("open socket: $started");
+    }
+  }
+
+  Future connectToSocket() async {
+    if (wifiP2PInfo != null) {
+      await WifiP2PManager.instance.connectToSocket(
+        groupOwnerAddress: wifiP2PInfo!.groupOwnerAddress,
+        downloadPath: "/storage/emulated/0/Download/",
+        maxConcurrentDownloads: 3,
+        deleteOnError: true,
+        onConnect: (address) {
+          snack("connected to socket: $address");
+        },
+        transferUpdate: (transfer) {
+          // if (transfer.count == 0) transfer.cancelToken?.cancel();
+          if (transfer.completed) {
+            snack(
+                "${transfer.failed ? "failed to ${transfer.receiving ? "receive" : "send"}" : transfer.receiving ? "received" : "sent"}: ${transfer.filename}");
+          }
+          print(
+              "ID: ${transfer.id}, FILENAME: ${transfer.filename}, PATH: ${transfer.path}, COUNT: ${transfer.count}, TOTAL: ${transfer.total}, COMPLETED: ${transfer.completed}, FAILED: ${transfer.failed}, RECEIVING: ${transfer.receiving}");
+        },
+        receiveString: (req) async {
+          snack(req);
+        },
+      );
+    }
+  }
+
+  Future closeSocketConnection() async {
+    bool closed = WifiP2PManager.instance.closeSocket();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "closed: $closed",
+        ),
+      ),
+    );
+  }
+
+  Future sendMessage() async {
+    WifiP2PManager.instance.sendStringToSocket(msgText.text);
+  }
+
+  Future sendFile(bool phone) async {
+    String? filePath = await FilesystemPicker.open(
+      context: context,
+      rootDirectory: Directory(phone ? "/storage/emulated/0/" : "/storage/"),
+      fsType: FilesystemType.file,
+      fileTileSelectMode: FileTileSelectMode.wholeTile,
+      showGoUp: true,
+      folderIconColor: Colors.blue,
+    );
+    if (filePath == null) return;
+    List<TransferUpdate>? updates =
+    await WifiP2PManager.instance.sendFiletoSocket(
+      [
+        filePath,
+        // "/storage/emulated/0/Download/Likee_7100105253123033459.mp4",
+        // "/storage/0E64-4628/Download/Adele-Set-Fire-To-The-Rain-via-Naijafinix.com_.mp3",
+        // "/storage/0E64-4628/Flutter SDK/p2p_plugin.apk",
+        // "/storage/emulated/0/Download/03 Omah Lay - Godly (NetNaija.com).mp3",
+        // "/storage/0E64-4628/Download/Adele-Set-Fire-To-The-Rain-via-Naijafinix.com_.mp3",
+      ],
+    );
+    print(updates);
   }
 
   void snack(String msg) async {
@@ -267,19 +361,19 @@ class _WifiPage2State extends State<WifiPage2> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.startSocket();
+                await startSocket();
               },
               child: const Text("Open a Socket"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.connectToSocket();
+                await connectToSocket();
               },
               child: const Text("Connect to Socket"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.closeSocketConnection();
+                await closeSocketConnection();
               },
               child: const Text("Close Socket"),
             ),
@@ -291,19 +385,19 @@ class _WifiPage2State extends State<WifiPage2> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.sendMessage(msgText.text);
+                sendMessage();
               },
               child: const Text("Send Message"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.sendFile(true,context);
+                await sendFile(true);
               },
               child: const Text("Send File"),
             ),
             ElevatedButton(
               onPressed: () async {
-                await WifiP2PManager.instance.sendFile(false,context);
+                await sendFile(false);
               },
               child: const Text("send File"),
             ),

@@ -2,7 +2,7 @@ name: test_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 0.22.0+51
+version: 0.22.2+53
 
 environment:
   sdk: ^3.6.0
@@ -19,6 +19,8 @@ dependencies:
   device_info_plus: ^9.0.3
   flutter_p2p_connection: ^2.0.1
   filesystem_picker: ^4.1.0
+  dio: ^4.0.6
+  mime_type: ^1.0.0
 
 
 dev_dependencies:
