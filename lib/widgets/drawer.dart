@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/settings.dart';
 import 'namechange.dart'; // Import the NameChangeDialog
 import 'package:provider/provider.dart'; // Import provider package
-import 'package:test_app/provider/theme_provider.dart'; // Import the ThemeProvider
+import '../provider/theme_provider.dart'; // Import the ThemeProvider
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});

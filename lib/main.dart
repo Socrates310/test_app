@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_app/screens/homepage.dart';
+import '../screens/homepage.dart';
 import 'screens/first_time_login.dart';
 import 'provider/theme_provider.dart';
 import '../services/wifi_p2p_manager.dart';

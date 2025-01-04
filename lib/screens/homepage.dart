@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
-import 'package:test_app/screens/wifi_page2.dart';
+import '../screens/wifi_page2.dart';
 //import 'package:test_app/services/wifi_managerold.dart';
 import '../widgets/drawer.dart';
 //import 'wifi_page.dart'; // Import the Wi-Fi Page
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: const CustomDrawer(),  // Include CustomDrawer
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.5,
     );
   }
 }
