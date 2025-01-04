@@ -339,7 +339,7 @@ class WifiP2PManager {
       }
       return true;
     } catch (e) {
-      debugPrint("FlutterP2pConnection: Tranfer error: $e");
+      debugPrint("FlutterP2pConnection: Transfer error: $e");
       return false;
     }
   }
@@ -389,7 +389,7 @@ class WifiP2PManager {
       }
       return updates;
     } catch (e) {
-      debugPrint("FlutterP2pConnection: Tranfer error: $e");
+      debugPrint("FlutterP2pConnection: Transfer error: $e");
       return null;
     }
   }
@@ -747,13 +747,20 @@ class WifiP2PManager {
       folderIconColor: Colors.blue,
     );
     if (filePath == null) return;
-    List<TransferUpdate>? updates =
-    await _flutterP2pConnectionPlugin.sendFiletoSocket([filePath]);
-    print(updates);
+    List<TransferUpdate>? updates = await _flutterP2pConnectionPlugin.sendFiletoSocket([filePath]);
+    log(updates as num);
   }
 
   Future<bool> register() async {
     if ((await FlutterP2pConnectionPlatform.instance.resume()) == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> unregister() async {
+    if ((await FlutterP2pConnectionPlatform.instance.pause()) == true) {
       return true;
     } else {
       return false;
@@ -845,6 +852,14 @@ class WifiP2PManager {
     });
   }
 
+  Future<bool> connect(String address) async {
+    if ((await FlutterP2pConnectionPlatform.instance.connect(address)) ==
+        true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   // Show a snack bar message
   void snack(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -854,11 +869,6 @@ class WifiP2PManager {
       ),
     );
   }
-
-
-  //void register() => _flutterP2pConnectionPlugin.register();
-
-  void unregister() => _flutterP2pConnectionPlugin.unregister();
 
   Future<bool?> createGroup() => _flutterP2pConnectionPlugin.createGroup();
 
@@ -888,7 +898,5 @@ class WifiP2PManager {
 
   Future<bool> enableWifiServices() async => await _flutterP2pConnectionPlugin.enableWifiServices();
 
-  Future<bool> connect(String address) async => await FlutterP2pConnectionPlatform.instance.connect(address) == true;
-
-
+  //Future<bool> connect(String address) async => await FlutterP2pConnectionPlatform.instance.connect(address) == true;
 }

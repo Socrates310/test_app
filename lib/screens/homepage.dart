@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
-import 'wifi_page.dart'; // Import the Wi-Fi Page
+import 'package:test_app/screens/wifi_page2.dart';
+//import 'package:test_app/services/wifi_managerold.dart';
+import '../widgets/drawer.dart';
+//import 'wifi_page.dart'; // Import the Wi-Fi Page
 import 'chat_page.dart';
+import '../services/wifi_p2p_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,10 +16,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _flutterP2pConnectionPlugin = FlutterP2pConnection();
+  //final _flutterP2pConnectionPlugin = FlutterP2pConnection();
+  WifiP2PInfo? wifiP2PInfo;
   List<DiscoveredPeers> peers = [];
   List<DiscoveredPeers> connectedDevices = []; // List of connected devices
   StreamSubscription<List<DiscoveredPeers>>? _streamPeers;
+  StreamSubscription<WifiP2PInfo>? _streamWifiInfo;
 
   @override
   void initState() {
@@ -30,11 +36,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initialize() async {
-    await _flutterP2pConnectionPlugin.initialize();
-    await _flutterP2pConnectionPlugin.register();
-    _streamPeers = _flutterP2pConnectionPlugin.streamPeers().listen((event) {
+    _streamPeers = WifiP2PManager.instance.streamPeers().listen((event) {
       setState(() {
         peers = event;
+      });
+    });
+    _streamWifiInfo = WifiP2PManager.instance.streamWifiP2PInfo().listen((event) {
+      setState(() {
+        wifiP2PInfo = event; // Assuming wifiP2PInfo is a member variable
       });
     });
     // Start discovering peers when the page loads
@@ -42,8 +51,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _connectToPeer(DiscoveredPeers peer) async {
-    bool? connected =
-        await _flutterP2pConnectionPlugin.connect(peer.deviceAddress);
+    bool? connected = await WifiP2PManager.instance.connect(peer.deviceAddress);
     if (connected == true) {
       setState(() {
         connectedDevices.add(peer); // Add to connected devices list
@@ -67,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              _flutterP2pConnectionPlugin.discover();
+              WifiP2PManager.instance.discover();
             },
           ),
           IconButton(
@@ -75,11 +83,12 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const WifiPage()),
+                MaterialPageRoute(builder: (context) => const WifiPage2()),
               );
             },
           ),
         ],
+
       ),
       body: Column(
         children: [
@@ -150,6 +159,8 @@ class _HomePageState extends State<HomePage> {
                 ),
         ],
       ),
+      drawer: const CustomDrawer(),  // Include CustomDrawer
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
     );
   }
 }

@@ -1,11 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-//import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter_p2p_connection/flutter_p2p_connection.dart';
-//import 'dart:io';
 import '../services/wifi_p2p_manager.dart';
-import 'dart:async';// Import the WifiP2PManager singleton
+import 'dart:async';
 import 'package:filesystem_picker/filesystem_picker.dart';
 
 class WifiPage2 extends StatefulWidget {
@@ -15,7 +12,7 @@ class WifiPage2 extends StatefulWidget {
   State<WifiPage2> createState() => _WifiPage2State();
 }
 
-class _WifiPage2State extends State<WifiPage2> {
+class _WifiPage2State extends State<WifiPage2> with WidgetsBindingObserver,AutomaticKeepAliveClientMixin{
   final TextEditingController msgText = TextEditingController();
   //final WifiP2PManager _wifiP2PManager = WifiP2PManager();
   WifiP2PInfo? wifiP2PInfo;
@@ -26,7 +23,8 @@ class _WifiPage2State extends State<WifiPage2> {
   @override
   void initState() {
     super.initState();
-   // WifiP2PManager.instance.initialize();
+    // WifiP2PManager.instance.initialize();
+    WidgetsBinding.instance.addObserver(this);
     _init();
   }
 
@@ -54,7 +52,18 @@ class _WifiPage2State extends State<WifiPage2> {
   @override
   void dispose() {
     //WifiP2PManager.instance.closeSocketConnection();
+    WidgetsBinding.instance.removeObserver(this);
+    WifiP2PManager.instance.unregister();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      WifiP2PManager.instance.unregister();
+    } else if (state == AppLifecycleState.resumed) {
+      WifiP2PManager.instance.register();
+    }
   }
 
   Future startSocket() async {
@@ -161,6 +170,7 @@ class _WifiPage2State extends State<WifiPage2> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Wifi Direct Connection')),
       body: SingleChildScrollView(
@@ -215,8 +225,7 @@ class _WifiPage2State extends State<WifiPage2> {
                               TextButton(
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  bool? bo = await WifiP2PManager.instance
-                                      .connect(peers[index].deviceAddress);
+                                  bool? bo = await WifiP2PManager.instance.connect(peers[index].deviceAddress);
                                   snack("connected: $bo");
                                 },
                                 child: const Text("connect"),
@@ -406,4 +415,7 @@ class _WifiPage2State extends State<WifiPage2> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
