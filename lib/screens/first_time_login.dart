@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'homepageold.dart';
+import 'homepage.dart';
+//import 'homepageold.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
 
@@ -49,7 +50,7 @@ class _FirstTimeLoginPageState extends State<FirstTimeLoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const MyHomePage(title: "ConnectX"),
+            builder: (context) => const HomePage(),
           ),
         );
       }

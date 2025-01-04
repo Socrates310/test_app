@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import the provider package
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/screens/homepage.dart';
-//import 'package:test_app/screens/wifi_page.dart';
 import 'screens/first_time_login.dart';
 import 'provider/theme_provider.dart';
-//import 'screens/wifi_page2.dart';
 import '../services/wifi_p2p_manager.dart';
 
 void main() async {
@@ -14,8 +12,7 @@ void main() async {
   // Load shared preferences and first-time login check
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-  await WifiP2PManager.instance.initialize();
-  await WifiP2PManager.instance.register();
+  await WiFiManagerService.initializeWiFiManager();
 
   runApp(
     ChangeNotifierProvider(
@@ -37,6 +34,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'ConnectX',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
@@ -55,6 +53,16 @@ class MyApp extends StatelessWidget {
           : HomePage(),
           //: WifiPage2(),
     );
+  }
+}
+
+class WiFiManagerService {
+  static Future<void> initializeWiFiManager() async {
+    await WifiP2PManager.instance.initialize();
+    await WifiP2PManager.instance.register();
+    WifiP2PManager.instance.closeSocket();
+    await WifiP2PManager.instance.removeGroup();
+    await WifiP2PManager.instance.discover();
   }
 }
 

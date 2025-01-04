@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nearby Devices'),
+        title: const Text('ConnectX'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
